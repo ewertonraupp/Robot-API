@@ -20,6 +20,10 @@ jobs:
       run: |
         pip install robotframework
         pip install robotframework-requests
+        pip install robotframework-jsonlibrary
+        pip install Faker
+        pip install robotframework-faker
+        pip install PyYAML
 
     - name: Run Robot Framework tests
       run: |
