@@ -27,7 +27,7 @@ jobs:
         
     - name: Archive Robot Framework results
       if: ${{ always() }}
-      uses: actions/upload=artifact@v3
+      uses: actions/upload-artifact@v3
       with:
         name: robot-results
         path: ./results
