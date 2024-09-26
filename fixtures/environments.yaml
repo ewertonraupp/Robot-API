@@ -1,0 +1,12 @@
+AMBIENTE: 
+  URL: https://chips.qacoders-academy.com.br/api/
+  LOGIN: login/
+
+  ENDPOINTS:
+    USER: user/
+    COMPANY: company/
+    COMPANY_ADDRESS: company/address/
+
+# ${BASE_URL}                          https://chips.qacoders-academy.com.br
+# ${ENDPOINT_COMPANY}                  /api/company/
+# ${ENDPOINT_COMPANY_ADDRESS}          /api/company/address/
