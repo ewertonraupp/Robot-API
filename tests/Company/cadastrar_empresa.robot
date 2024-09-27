@@ -5,6 +5,7 @@ Suite Setup    Realizar Login Admin
 
 *** Test Cases ***
 CT - Cadastrar empresa com sucesso
+    [Tags]    CADASTRAR_EMPRESA_SUCESSO
     Gerar empresa
     Cadastrar uma nova empresa
     Conferir se a nova empresa foi cadastrada corretamente

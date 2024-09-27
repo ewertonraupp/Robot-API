@@ -5,7 +5,7 @@ Test Setup     Realizar Login Admin
 
 *** Test Cases ***
 Editar cadastro de usuário
-    [Tags]    EDITAR_USUARIO
+    [Tags]    EDITAR_USUARIO_SUCESSO
     Gerar um novo usuário
     Cadastrar um novo usuário
     Validar usuário criado
