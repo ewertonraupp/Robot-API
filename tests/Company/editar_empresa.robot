@@ -6,9 +6,11 @@ Suite Setup    Realizar Login Admin
 *** Test Cases ***
 CT - Cadastrar empresa com sucesso
     Cadastrar uma nova empresa
+    Validar nova empresa criada
 
 CT - Editar endereço empresa
-    Editar endereco com sucesso    22222222    Cidade alterada
+    Editar endereco com sucesso
+    Validar empresa com endereço editado
 
     Campo CEP vazio    ${EMPTY}
     Campo CEP excedendo 8 números    123456789

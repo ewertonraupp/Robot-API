@@ -6,7 +6,6 @@ Test Setup     Realizar Login Admin
 *** Test Cases ***
 Cadastro de usuário com sucesso
     [Tags]    CADASTRAR_USUARIO_SUCESSO
-    Gerar um novo usuário
     Cadastrar um novo usuário
     Validar usuário criado
     Deletar o novo usuário criado

@@ -6,5 +6,8 @@ Suite Setup    Realizar Login Admin
 *** Test Cases ***
 CT - Consultar empresa por ID
     [Tags]    CONSULTAR_EMPRESA_SUCESSO
+    Cadastrar uma nova empresa
+    Validar nova empresa criada
     Listar empresas
-    Consultar dados empresa
+    Consultar empresa
+    Deletar empresa

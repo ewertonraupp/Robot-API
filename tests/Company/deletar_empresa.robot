@@ -6,7 +6,8 @@ Suite Setup    Realizar Login Admin
 *** Test Cases ***
 CT - Deletar empresa criada
     [Tags]    DELETAR_EMPRESA_SUCESSO
-    Listar empresas
+    Cadastrar uma nova empresa
+    Validar nova empresa criada
     Deletar empresa
 
 # Pré Requisito

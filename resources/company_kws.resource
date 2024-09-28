@@ -13,15 +13,6 @@ Gerar endereco empresa
     ${number}          Generate Random String    length=3     chars=[NUMBERS]
     ${complement}      Generate Random String    length=6     chars=[NUMBERS]
     ${country}         FakerLibrary.Country
-
-    # Set Test Variable    ${zipCode}
-    # Set Test Variable    ${city}
-    # Set Test Variable    ${state}
-    # Set Test Variable    ${district}
-    # Set Test Variable    ${street}
-    # Set Test Variable    ${number}
-    # Set Test Variable    ${complement} 
-    # Set Test Variable    ${country}
     
     &{endereco}    Create Dictionary
     ...    zipCode=${zipCode}
@@ -63,54 +54,93 @@ Gerar empresa
     
 Cadastrar uma nova empresa
     ${body}    Gerar empresa
-    Criar sessao
-    ${response_post_company}    POST On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY}    json=${body}
-    Set Suite Variable    ${COMPANY_ID}    ${response_post_company.json()["newCompany"]["_id"]}
-    Set Test Variable     ${RESPOSTA}      ${response_post_company.json()}
+    ${HEADERS}       Create Dictionary    Content-Type=Application/json
+    ...    Authorization=${TOKEN_ADMIN}
+    ${response_post_company}    POST On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY}
+    ...    json=${body}    headers=${HEADERS}
 
-Conferir se a nova empresa foi cadastrada corretamente
-    Log    ${RESPOSTA}
-    Dictionary Should Contain Key          ${RESPOSTA}    msg    Olá a companhia Test Case 00 Ltda foi cadastrada com sucesso.           
-    Dictionary Should Contain Key          ${RESPOSTA['newCompany']}    _id    ${COMPANY_ID}
-    # Should Be Equal As Strings    ${response.json()}[msg]    Olá a companhia Test Case 00 Ltda foi cadastrada com sucesso.
+    Status Should Be    201
+    Dictionary Should Contain Key     ${response_post_company.json()["newCompany"]}    _id
+    Dictionary Should Contain Item    ${response_post_company.json()}            msg
+    ...    Olá a companhia ${body.corporateName} foi cadastrada com sucesso.
+    Dictionary Should Contain Item    ${response_post_company.json()["newCompany"]}
+    ...    mail    ${body.mail}
+    Dictionary Should Contain Item    ${response_post_company.json()["newCompany"]}
+    ...    corporateName    ${body.corporateName}
+    Dictionary Should Contain Item    ${response_post_company.json()["newCompany"]}
+    ...    registerCompany     ${body.registerCompany}
+
+    Set Suite Variable    ${COMPANY_ID}        ${response_post_company.json()["newCompany"]["_id"]}
+    Set Test Variable     ${COMPANY_MAIL}      ${response_post_company.json()["newCompany"]["mail"]}
+    Set Test Variable     ${CORPORATE_NAME}    ${response_post_company.json()["newCompany"]["corporateName"]}
+    Set Test Variable     ${CNPJ}              ${response_post_company.json()["newCompany"]["registerCompany"]}
+
+
+Validar nova empresa criada
+    ${HEADERS}    Criar sessao
+    ${response_get_company}    GET On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY}${COMPANY_ID}
+    ...    headers=${HEADERS}
+
+    Should Be Equal      ${response_get_company.json()["_id"]}                ${COMPANY_ID}
+    Should Be Equal      ${response_get_company.json()["mail"]}               ${COMPANY_MAIL}
+    Should Be Equal      ${response_get_company.json()["corporateName"]}      ${CORPORATE_NAME}
+    Should Be Equal      ${response_get_company.json()["registerCompany"]}    ${CNPJ}
+
 
 Listar empresas
     Criar sessao
     ${response}    GET On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY}    expected_status=200
-    Set Test Variable    ${COMPANY_ID}    ${response.json()}[0][_id]
 
-Consultar dados empresa
+
+Consultar empresa
     Criar sessao
-    ${response}    GET On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY}${COMPANY_ID}    expected_status=200
-    Set Test Variable     ${response}      ${response.json()}
-    # Should Be Equal As Strings    ${response.json()}[_id]    ${COMPANY_ID}
-    # Log To Console    ID Empresa: ${COMPANY_ID}
+    ${response_get_company}    GET On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY}${COMPANY_ID}    expected_status=200
+
 
 Deletar empresa
-    ${response}    DELETE On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY}${COMPANY_ID}    expected_status=200
-    Should Be Equal As Strings    ${response.json()}[msg]    Companhia deletado com sucesso.
-    ${response}    GET On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY}${COMPANY_ID}    expected_status=400
-    Should Be Equal As Strings    ${response.json()}[alert][0]    Essa companhia não existe em nosso sistema.
+    ${response_delete_company}    DELETE On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY}${COMPANY_ID}    expected_status=200
+    Should Be Equal As Strings    ${response_delete_company.json()}[msg]    Companhia deletado com sucesso.
+    ${response_get_company}    GET On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY}${COMPANY_ID}    expected_status=400
+    Should Be Equal As Strings    ${response_get_company.json()}[alert][0]    Essa companhia não existe em nosso sistema.
 
-Editar endereco
-    [Arguments]    ${zipCode}
-    ${requestJson}    Gerar empresa
-    Set To Dictionary    ${requestJson}[address][0]    zipCode=${zipCode}
-    ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}
-    Log    ${response.json()}
-    Should Be Equal As Strings    ${response.json()}[msg]    Endereço da companhia atualizado com sucesso.
-    Should Be Equal As Strings    ${zipCode}    ${response.json()["updateCompany"]["address"][0]["zipCode"]}
+# Editar endereco
+#     [Arguments]    ${zipCode}
+#     ${requestJson}    Gerar empresa
+#     Set To Dictionary    ${requestJson}[address][0]    zipCode=${zipCode}
+#     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}
+#     Log    ${response.json()}
+#     Should Be Equal As Strings    ${response.json()}[msg]    Endereço da companhia atualizado com sucesso.
+#     Should Be Equal As Strings    ${zipCode}    ${response.json()["updateCompany"]["address"][0]["zipCode"]}
 
 Editar endereco com sucesso
-    [Arguments]    ${zipCode}    ${city}
-    Criar sessao
-    ${requestJson}    Gerar empresa
-    Set To Dictionary    ${requestJson}[address][0]    zipCode=22222222    city=Cidade alterada
-    ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}
-    Should Be Equal As Strings    ${response.json()}[msg]    Endereço da companhia atualizado com sucesso.
-    Should Be Equal As Strings    ${zipCode}        ${response.json()["updateCompany"]["address"][0]["zipCode"]}
-    Should Be Equal As Strings    ${city}           ${response.json()["updateCompany"]["address"][0]["city"]}
-    Should Be Equal As Strings    ${COMPANY_ID}     ${response.json()["updateCompany"]["_id"]}
+    ${HEADERS}    Create Dictionary    Content-Type=Application/json
+    ...    Authorization=${TOKEN_ADMIN}
+
+    ${body}    Gerar empresa
+
+    ${response_put_company}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}
+    ...    json=${body}    headers=${HEADERS}
+
+    Status Should Be    201
+    Dictionary Should Contain Item    ${response_put_company.json()}    msg     Endereço da companhia atualizado com sucesso.
+
+    Set Suite Variable    ${COMPANY_ID}         ${response_put_company.json()["updateCompany"]["_id"]}
+    Set Test Variable     ${COMPANY_ZIPCODE}    ${response_put_company.json()["updateCompany"]["address"][0]["zipCode"]}
+    Set Test Variable     ${COMPANY_CITY}       ${response_put_company.json()["updateCompany"]["address"][0]["city"]}
+    Set Test Variable     ${COMPANY_COUNTRY}    ${response_put_company.json()["updateCompany"]["address"][0]["country"]}
+    
+
+Validar empresa com endereço editado
+    ${HEADERS}    Criar sessao
+    ${response_get_company}    GET On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY}${COMPANY_ID}
+    ...    headers=${HEADERS}
+
+    Status Should Be     200
+    Should Be Equal      ${response_get_company.json()["_id"]}                      ${COMPANY_ID}
+    Should Be Equal      ${response_get_company.json()["address"][0]["zipCode"]}    ${COMPANY_ZIPCODE}
+    Should Be Equal      ${response_get_company.json()["address"][0]["city"]}       ${COMPANY_CITY}
+    Should Be Equal      ${response_get_company.json()["address"][0]["country"]}    ${COMPANY_COUNTRY}
+    
 
 Campo CEP vazio
     [Arguments]    ${zipCode}
