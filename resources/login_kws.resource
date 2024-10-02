@@ -8,7 +8,7 @@ Criar sessao
     ${HEADERS}      Create Dictionary     Content-Type=Application/json    Authorization=${TOKEN_ADMIN}
     Create Session    auth    url=${AMBIENTE.URL}    headers=${HEADERS}
     
-    
+
 Realizar Login Admin
     ${HEADERS}      Create Dictionary    Content-Type=Application/json
     Create Session    auth    url=${AMBIENTE.URL}    headers=${HEADERS}    disable_warnings=${True}
@@ -19,11 +19,11 @@ Realizar Login Admin
     ${response}     POST On Session    auth    ${AMBIENTE.LOGIN}    json=${body}
 
     Status Should Be    200
-    Dictionary Should Contain Key               ${response.json()}    token
-    Set Suite Variable     ${TOKEN_ADMIN}       ${response.json()["token"]}
-    Set Test Variable      ${response_login}    ${response.json()}
-    Set Test Variable      ${fullname_user}     ${response.json()["user"]["fullName"]}
-    Should Not Be Empty    ${TOKEN_ADMIN}
+    Dictionary Should Contain Key                ${response.json()}    token
+    Set Suite Variable      ${TOKEN_ADMIN}       ${response.json()["token"]}
+    Should Not Be Empty     ${TOKEN_ADMIN}
+    Set Suite Variable      ${fullname_user}     ${response.json()["user"]["fullName"]}
+    Set Suite Variable      ${response_login}    ${response.json()}
 
 
 Validar Login com sucesso
