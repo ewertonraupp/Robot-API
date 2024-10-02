@@ -5,11 +5,6 @@ Resource         package.resource
 
 *** Keywords ***
 Gerar um novo usuário
-    # ${CPF}          Generate Random String    length=11    chars=[NUMBERS]
-    # ${NOME}         Generate Random String    length=8    chars=[LETTERS]
-    # ${SOBRENOME}    Generate Random String    length=8    chars=[LETTERS]
-    # ${FULL_NAME}    catenate        T${NOME}    T${SOBRENOME}
-    # ${MAIL}         Set Variable    teste${CPF}@qa-coders.com.br
     ${CPF}              FakerLibrary.cpf
     ${CPF}              Remove String    ${CPF}    .    -
     ${PRIMEIRO_NAME}    FakerLibrary.First Name
@@ -81,7 +76,7 @@ Editar cadastro do novo usuário
     ...    json=${body}    headers=${HEADERS}
 
     Status Should Be    200
-    Dictionary Should Contain Item    ${response_put_user.json()}    msg     Dados atualizados com sucesso!
+    Dictionary Should Contain Item            ${response_put_user.json()}    msg     Dados atualizados com sucesso!
     Set Test Variable    ${ID}                ${response_put_user.json()["updatedUser"]["_id"]}
     Set Test Variable    ${FULLNAME}          ${response_put_user.json()["updatedUser"]["fullName"]}
     Set Test Variable    ${CPF}               ${response_put_user.json()["updatedUser"]["cpf"]}
@@ -102,18 +97,21 @@ Validar usuário editado
 Consultar usuário
     Criar sessao
     ${response_get_user}    GET On Session    auth    ${AMBIENTE.ENDPOINTS.USER}${ID}
+
     Dictionary Should Contain Key     ${response_get_user.json()}    _id
     Dictionary Should Contain Item    ${response_get_user.json()}    mail        ${MAIL}
     Dictionary Should Contain Item    ${response_get_user.json()}    fullName    ${FULLNAME}
-    Dictionary Should Contain Item    ${response_get_user.json()}    cpf   ${CPF}
+    Dictionary Should Contain Item    ${response_get_user.json()}    cpf         ${CPF}
 
 
 Deletar o novo usuário criado
     ${HEADERS}     Criar sessao
     ${response}    DELETE On Session    auth    ${AMBIENTE.ENDPOINTS.USER}${ID}
     ...    headers=${HEADERS}
+    
     Should Be Equal As Strings    ${response.json()}[msg]         Usuário deletado com sucesso!.
 
     ${response}    GET On Session    auth    ${AMBIENTE.ENDPOINTS.USER}${ID}
     ...    headers=${HEADERS}    expected_status=404
+    
     Should Be Equal As Strings    ${response.json()}[alert][0]    Esse usuário não existe em nossa base de dados.

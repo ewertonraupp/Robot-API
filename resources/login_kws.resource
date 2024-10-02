@@ -8,9 +8,10 @@ Criar sessao
     ${HEADERS}      Create Dictionary     Content-Type=Application/json    Authorization=${TOKEN_ADMIN}
     Create Session    auth    url=${AMBIENTE.URL}    headers=${HEADERS}
     
+    
 Realizar Login Admin
     ${HEADERS}      Create Dictionary    Content-Type=Application/json
-    Create Session    auth    ${AMBIENTE.URL}    ${HEADERS}    disable_warnings=${True}
+    Create Session    auth    url=${AMBIENTE.URL}    headers=${HEADERS}    disable_warnings=${True}
 
     ${body}         Create Dictionary    mail=${SYSADMIN.USER}
     ...    password=${SYSADMIN.PASSWORD}
@@ -18,8 +19,45 @@ Realizar Login Admin
     ${response}     POST On Session    auth    ${AMBIENTE.LOGIN}    json=${body}
 
     Status Should Be    200
-    Dictionary Should Contain Key           ${response.json()}    token
-    Set Suite Variable     ${TOKEN_ADMIN}    ${response.json()["token"]}
+    Dictionary Should Contain Key               ${response.json()}    token
+    Set Suite Variable     ${TOKEN_ADMIN}       ${response.json()["token"]}
+    Set Test Variable      ${response_login}    ${response.json()}
+    Set Test Variable      ${fullname_user}     ${response.json()["user"]["fullName"]}
     Should Not Be Empty    ${TOKEN_ADMIN}
-    
+
+
+Validar Login com sucesso
+    Log    ${response_login}
+    Status Should Be    200
+    Dictionary Should Contain Key    ${response_login}    msg
+    Dictionary Should Contain Key    ${response_login}    token
+    Should Be Equal    ${response_login["msg"]}      Olá ${fullname_user}, autenticação autorizada com sucesso!
+    Should Be Equal    ${response_login["token"]}    ${TOKEN_ADMIN}
+
+
+# Realizar Login User
+#     [Arguments]    ${user}    ${pass}
+#     ${HEADERS}      Create Dictionary    Content-Type=Application/json
+#     Create Session    auth    url=${AMBIENTE.URL}    headers=${HEADERS}    disable_warnings=${True}
+
+#     ${body}         Create Dictionary    mail=${user}
+#     ...    password=${pass}
+
+#     ${response}     POST On Session    auth    ${AMBIENTE.LOGIN}    json=${body}
+
+#     Status Should Be    200
+#     Dictionary Should Contain Key                ${response.json()}    token
+#     Set Suite Variable     ${TOKEN}              ${response.json()["token"]}
+#     Set Test Variable      ${response_login2}    ${response.json()}
+#     Set Test Variable      ${fullname_user}      ${response.json()["user"]["fullName"]}
+#     Should Not Be Empty    ${TOKEN}
+
+# Validar Login User
+#     Log    ${response_login2}
+#     Status Should Be    200
+#     Dictionary Should Contain Key    ${response_login2}    msg
+#     Dictionary Should Contain Key    ${response_login2}    token
+#     Should Be Equal    ${response_login2["msg"]}      Olá ${fullname_user}, autenticação autorizada com sucesso!
+#     Should Be Equal    ${response_login2["token"]}    ${TOKEN}
+
 

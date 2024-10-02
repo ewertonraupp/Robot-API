@@ -56,6 +56,7 @@ Cadastrar uma nova empresa
     ${body}    Gerar empresa
     ${HEADERS}       Create Dictionary    Content-Type=Application/json
     ...    Authorization=${TOKEN_ADMIN}
+    
     ${response_post_company}    POST On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY}
     ...    json=${body}    headers=${HEADERS}
 
@@ -99,18 +100,13 @@ Consultar empresa
 
 Deletar empresa
     ${response_delete_company}    DELETE On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY}${COMPANY_ID}    expected_status=200
+
     Should Be Equal As Strings    ${response_delete_company.json()}[msg]    Companhia deletado com sucesso.
+
     ${response_get_company}    GET On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY}${COMPANY_ID}    expected_status=400
+
     Should Be Equal As Strings    ${response_get_company.json()}[alert][0]    Essa companhia não existe em nosso sistema.
 
-# Editar endereco
-#     [Arguments]    ${zipCode}
-#     ${requestJson}    Gerar empresa
-#     Set To Dictionary    ${requestJson}[address][0]    zipCode=${zipCode}
-#     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}
-#     Log    ${response.json()}
-#     Should Be Equal As Strings    ${response.json()}[msg]    Endereço da companhia atualizado com sucesso.
-#     Should Be Equal As Strings    ${zipCode}    ${response.json()["updateCompany"]["address"][0]["zipCode"]}
 
 Editar endereco com sucesso
     ${HEADERS}    Create Dictionary    Content-Type=Application/json
@@ -148,6 +144,7 @@ Campo CEP vazio
     Set To Dictionary    ${requestJson}[address][0]    zipCode=${zipCode}
     Log     ${requestJson}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo 'CEP' é obrigatório.
 
 Campo CEP excedendo 8 números
@@ -155,6 +152,7 @@ Campo CEP excedendo 8 números
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    zipCode=${zipCode}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo 'CEP' deve conter 8 dígitos
 
 Campo CEP com letras
@@ -162,6 +160,7 @@ Campo CEP com letras
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    zipCode=${zipCode}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo 'CEP' só pode conter números
 
 Campo CEP com caracteres especiais
@@ -169,6 +168,7 @@ Campo CEP com caracteres especiais
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    zipCode=${zipCode}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo 'CEP' só pode conter números
 
 Campo cidade vazio
@@ -176,6 +176,7 @@ Campo cidade vazio
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    city=${city}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo 'cidade' é obrigatório.
 
 Campo cidade com caracteres especiais
@@ -183,6 +184,7 @@ Campo cidade com caracteres especiais
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    city=${city}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo 'cidade' só pode conter letras e os caracteres especiais 'ª', 'º', '‘' e '-'.
 
 Campo cidade com números
@@ -190,6 +192,7 @@ Campo cidade com números
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    city=${city}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo 'cidade' só pode conter letras e os caracteres especiais 'ª', 'º', '‘' e '-'.
 
 Campo cidade excedendo 50 caracteres
@@ -197,6 +200,7 @@ Campo cidade excedendo 50 caracteres
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    city=${city}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo 'cidade' deve possuir no máximo 50 caracteres.
 
 Campo estado vazio
@@ -204,6 +208,7 @@ Campo estado vazio
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    state=${state}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo 'estado' é obrigatório.
 
 Campo estado com números
@@ -211,6 +216,7 @@ Campo estado com números
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    state=${state}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo 'estado' só pode conter letras maiúsculas
 
 Campo estado com caracteres especiais
@@ -218,6 +224,7 @@ Campo estado com caracteres especiais
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    state=${state}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo 'estado' só pode conter letras maiúsculas
 
 Campo estado excedendo 2 caracteres
@@ -225,6 +232,7 @@ Campo estado excedendo 2 caracteres
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    state=${state}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo 'estado' deve possuir 2 caracteres.
 
 Campo estado com letras minúsculas
@@ -232,6 +240,7 @@ Campo estado com letras minúsculas
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    state=${state}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo 'estado' só pode conter letras maiúsculas
 
 Campo bairro vazio
@@ -239,6 +248,7 @@ Campo bairro vazio
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    district=${district}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo 'bairro' é obrigatório.
 
 Campo bairro excedendo 50 caracteres
@@ -246,6 +256,7 @@ Campo bairro excedendo 50 caracteres
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    district=${district}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo 'bairro' deve possuir no máximo 50 caracteres.
 
 Campo bairro com caracteres especiais
@@ -253,6 +264,7 @@ Campo bairro com caracteres especiais
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    district=${district}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo 'bairro' só pode conter letras, números e os caracteres especiais 'ª', 'º', '‘' e '-'
 
 Campo logradouro vazio
@@ -260,6 +272,7 @@ Campo logradouro vazio
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    street=${street}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo 'logradouro' é obrigatório.
 
 Campo logradouro com caracteres especiais
@@ -267,6 +280,7 @@ Campo logradouro com caracteres especiais
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    street=${street}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo 'logradouro' só pode conter letras, números e os caracteres especiais 'ª', 'º', '‘' e '-'
 
 Campo número vazio
@@ -274,6 +288,7 @@ Campo número vazio
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    number=${number}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo 'número' é obrigatório.
 
 Campo número excedendo 10 caracteres
@@ -281,6 +296,7 @@ Campo número excedendo 10 caracteres
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    number=${number}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo 'número' deve possuir no máximo 10 caracteres.
 
 Campo complemento excedendo 80 caracteres
@@ -288,6 +304,7 @@ Campo complemento excedendo 80 caracteres
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    complement=${complement}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo 'complemento' deve possuir no máximo 80 caracteres.
 
 Campo complemento com caracteres especiais
@@ -295,6 +312,7 @@ Campo complemento com caracteres especiais
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    complement=${complement}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo 'complemento' só pode conter letras, números e os caracteres especiais 'ª', 'º', '‘' e '-'
 
 Campo país vazio
@@ -302,6 +320,7 @@ Campo país vazio
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    country=${country}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo País é obrigatório.
 
 Campo país excedendo 50 caracteres
@@ -309,4 +328,5 @@ Campo país excedendo 50 caracteres
     ${requestJson}    Gerar empresa
     Set To Dictionary    ${requestJson}[address][0]    country=${country}
     ${response}    PUT On Session    auth    ${AMBIENTE.ENDPOINTS.COMPANY_ADDRESS}${COMPANY_ID}    json=${requestJson}    expected_status=400
+    
     Should Be Equal As Strings    ${response.json()}[error][0]    O campo País permite até 50 caracteres.
