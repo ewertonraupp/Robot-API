@@ -9,10 +9,10 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Setup Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
         python-version: '3.x'
     
@@ -28,11 +28,11 @@ jobs:
 
     - name: Run Robot Framework tests
       run: |
-        robot -d results tests
+        robot -d logs tests
         
-    - name: Archive Robot Framework results
+    - name: Archive Robot Framework logs
       if: ${{ always() }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: robot-results
-        path: ./results
+        name: robot-logs
+        path: ./logs
