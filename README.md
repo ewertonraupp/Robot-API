@@ -15,7 +15,6 @@ Antes de começar, certifique-se de ter os seguintes itens instalados:
 - [Robot Framework-Faker](https://pypi.org/project/robotframework-faker/) (versão mais recente)
 - [Robot PyYAML](https://pypi.org/project/PyYAML/) (versão mais recente)
 - [RequestsLibrary](https://github.com/robotframework/RequestsLibrary) para testes de API
-- [SeleniumLibrary](https://github.com/robotframework/SeleniumLibrary/) biblioteca utilizada para o teste Web.
 
 ## Instruções para a execução ##
 ```bash
