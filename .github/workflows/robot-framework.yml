@@ -7,6 +7,14 @@ jobs:
     name: Run Tests
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: https://ewertonraupp.github.io/Robot-API/report.html
+
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
@@ -36,3 +44,16 @@ jobs:
       with:
         name: robot-logs
         path: ./logs
+        
+    - name: Setup Pages
+      uses: actions/configure-pages@v2
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: logs/
+
+    - name: Deploy to Githug Pages
+      uses: actions/deploy-pages@v1
+
+
