@@ -1,4 +1,5 @@
 *** Settings ***
+Documentation    Arquivo contendo os casos de testes de api relacionados a cadastro de usuário
 Resource       ../../resources/user_kws.resource
 Test Setup     Realizar Login Admin
 

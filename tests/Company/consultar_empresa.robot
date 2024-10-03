@@ -1,4 +1,5 @@
 *** Settings ***
+Documentation    Arquivo contendo os casos de testes de api relacionados a consulta de empresa
 Resource       ../../resources/company_kws.resource
 Suite Setup    Realizar Login Admin
 
