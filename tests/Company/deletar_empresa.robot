@@ -10,7 +10,3 @@ CT - Deletar empresa criada
     Cadastrar uma nova empresa
     Validar nova empresa criada
     Deletar empresa
-
-# Pré Requisito
-# Ação 
-# Resultado esperado e validação

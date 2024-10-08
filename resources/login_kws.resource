@@ -35,29 +35,5 @@ Validar Login com sucesso
     Should Be Equal    ${response_login["token"]}    ${TOKEN_ADMIN}
 
 
-# Realizar Login User
-#     [Arguments]    ${user}    ${pass}
-#     ${HEADERS}      Create Dictionary    Content-Type=Application/json
-#     Create Session    auth    url=${AMBIENTE.URL}    headers=${HEADERS}    disable_warnings=${True}
-
-#     ${body}         Create Dictionary    mail=${user}
-#     ...    password=${pass}
-
-#     ${response}     POST On Session    auth    ${AMBIENTE.LOGIN}    json=${body}
-
-#     Status Should Be    200
-#     Dictionary Should Contain Key                ${response.json()}    token
-#     Set Suite Variable     ${TOKEN}              ${response.json()["token"]}
-#     Set Test Variable      ${response_login2}    ${response.json()}
-#     Set Test Variable      ${fullname_user}      ${response.json()["user"]["fullName"]}
-#     Should Not Be Empty    ${TOKEN}
-
-# Validar Login User
-#     Log    ${response_login2}
-#     Status Should Be    200
-#     Dictionary Should Contain Key    ${response_login2}    msg
-#     Dictionary Should Contain Key    ${response_login2}    token
-#     Should Be Equal    ${response_login2["msg"]}      Olá ${fullname_user}, autenticação autorizada com sucesso!
-#     Should Be Equal    ${response_login2["token"]}    ${TOKEN}
 
 
