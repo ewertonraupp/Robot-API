@@ -26,13 +26,8 @@ jobs:
     
     - name: Install dependencies
       run: |
-        pip install robotframework
-        pip install robotframework-requests
-        pip install robotframework-jsonlibrary
-        pip install Faker
-        pip install robotframework-faker
-        pip install PyYAML
-        pip install setuptools
+        echo Instalação das depedências do Projeto
+        pip install -r requirements.txt
 
     - name: Run Robot Framework tests
       run: |
